@@ -1,0 +1,32 @@
+import { Component, OnInit } from '@angular/core';
+import { FoodService } from 'src/app/services/food.service';
+import {Food} from 'src/app/shared/models/Food';
+import { ActivatedRoute, Route, Router } from '@angular/router';
+import { CartService } from 'src/app/services/cart.service';
+
+@Component({
+  selector: 'app-food-page',
+  templateUrl: './food-page.component.html',
+  styleUrls: ['./food-page.component.css']
+})
+export class FoodPageComponent implements OnInit{
+  food!:Food;
+  constructor(private foodService:FoodService, activatedRoute:ActivatedRoute,private cartService:CartService,private router:Router){
+    activatedRoute.params.subscribe((params)=>{
+      if(params['id'])
+      foodService.getAllFoodsById(params['id']).subscribe(serverFood=>{
+        this.food=serverFood;
+      });
+      
+    })
+
+   
+}
+ngOnInit(): void {
+    
+}
+addToCart(){
+  this.cartService.addToCart(this.food);
+  this.router.navigateByUrl('/cart-page');
+}
+}
